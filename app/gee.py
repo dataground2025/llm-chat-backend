@@ -2,18 +2,25 @@ from fastapi import APIRouter, Query, HTTPException
 import ee
 import os
 import json 
+import tempfile
 
 router = APIRouter()
 
 def gee_initialize():
     """Initialize Google Earth Engine with service account authentication."""
     try:
-        service_account_file = os.getenv('GOOGLE_CREDENTIALS') #"dataground-469809-bbf1ad56f311.json"
+        service_account_file = os.getenv('GOOGLE_CREDENTIALS')  #"dataground-469809-bbf1ad56f311.json"
+        if not service_account_file:
+            raise ValueError("GOOGLE_CREDENTIALS env variable not found.")
         
-        if os.path.exists(service_account_file):
+        with tempfile.NamedTemporaryFile(mode="w+", suffix=".json", delete=False) as f:
+            json.dump(json.loads(service_account_file), f)
+            temp_path = f.name
+        
+        if os.path.exists(temp_path):
             credentials = ee.ServiceAccountCredentials(
                 email='gigloombusiness@gmail.com',
-                key_file=service_account_file
+                key_file=temp_path,
             )
             ee.Initialize(credentials, project='dataground-469809')
             print("GEE initialized with service account authentication")
