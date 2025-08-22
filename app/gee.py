@@ -7,7 +7,7 @@ router = APIRouter()
 def gee_initialize():
     """Initialize Google Earth Engine with service account authentication."""
     try:
-        service_account_file = 'dataground-demo-fbb1b3729b23.json'
+        service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_JSON")
         
         if os.path.exists(service_account_file):
             credentials = ee.ServiceAccountCredentials(
