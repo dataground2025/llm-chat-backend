@@ -1,32 +1,33 @@
 from fastapi import APIRouter, Query, HTTPException
 import ee
 import os
+import json 
 
 router = APIRouter()
 
 def gee_initialize():
     """Initialize Google Earth Engine with service account authentication."""
     try:
-        service_account_file = os.getenv("GCP_SERVICE_ACCOUNT_JSON")
+        service_account_file = os.getenv('GOOGLE_CREDENTIALS') #"dataground-469809-bbf1ad56f311.json"
         
         if os.path.exists(service_account_file):
             credentials = ee.ServiceAccountCredentials(
-                email='dataground2025@gmail.com',
+                email='gigloombusiness@gmail.com',
                 key_file=service_account_file
             )
-            ee.Initialize(credentials, project='dataground-demo')
+            ee.Initialize(credentials, project='dataground-469809')
             print("GEE initialized with service account authentication")
         else:
             print(f"Service account file '{service_account_file}' not found. Attempting interactive authentication...")
             ee.Authenticate()
-            ee.Initialize(project='dataground-demo')
+            ee.Initialize(project='dataground-469809')
             print("GEE initialized with interactive authentication")
             
     except Exception as e:
         print(f"Error initializing GEE: {str(e)}")
         try:
             ee.Authenticate()
-            ee.Initialize(project='dataground-demo')
+            ee.Initialize(project='dataground-469809')
             print("GEE initialized with interactive authentication (fallback)")
         except Exception as e2:
             print(f"Failed to initialize GEE: {str(e2)}")
