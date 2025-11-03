@@ -47,6 +47,10 @@ httplib2
 google-adk
 litellm
 
+# Web Search
+ddgs
+duckduckgo-search
+
 # Networking & Protocols
 anyio
 httpcore
